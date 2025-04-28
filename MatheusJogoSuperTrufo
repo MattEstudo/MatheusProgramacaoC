@@ -1,0 +1,184 @@
+#include <stdio.h>
+#include <string.h>
+
+// Definição da estrutura para as cartas
+typedef struct {
+    char estado[3];
+    unsigned int codigo;
+    char nome[100];
+    unsigned long populacao;
+    float area;
+    float PIB;
+    unsigned int pontos_turisticos;
+    float densidade_populacional;
+    float PIB_per_capita;
+    float super_poder;
+} Carta;
+
+// Função para calcular densidade populacional e PIB per capita
+void calcularDensidadeEPIB(Carta *carta) {
+    if (carta->area > 0) {
+        carta->densidade_populacional = carta->populacao / carta->area;
+    } else {
+        carta->densidade_populacional = 0;
+    }
+    if (carta->populacao > 0) {
+        carta->PIB_per_capita = carta->PIB * 1e6 / carta->populacao;
+    } else {
+        carta->PIB_per_capita = 0;
+    }
+}
+
+// Função para calcular o "super poder" (exemplo de implementação)
+void calcularSuperPoder(Carta *carta) {
+    carta->super_poder = carta->PIB_per_capita * carta->pontos_turisticos;
+}
+
+// Função para limpar o buffer de entrada
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+// Função para leitura segura de strings
+void lerString(char *str, int tamanho) {
+    fgets(str, tamanho, stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove o '\n' do final
+}
+
+// Função para validar entradas
+int validarValor(float valor, float min, float max) {
+    return valor >= min && valor <= max;
+}
+
+int main() {
+    Carta carta1, carta2;
+
+    // Leitura dos dados da Carta 1
+    printf("Digite os dados da Carta 1:\n");
+    printf("Estado (sigla): ");
+    scanf("%2s", carta1.estado);
+    limparBuffer();
+
+    printf("Código: ");
+    while (scanf("%u", &carta1.codigo) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Nome: ");
+    lerString(carta1.nome, sizeof(carta1.nome));
+
+    printf("População: ");
+    while (scanf("%lu", &carta1.populacao) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Área (km²): ");
+    while (scanf("%f", &carta1.area) != 1 || !validarValor(carta1.area, 0.1, 1e7)) {
+        printf("Entrada inválida. Digite um valor positivo para a área: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("PIB (em milhões de US$): ");
+    while (scanf("%f", &carta1.PIB) != 1 || !validarValor(carta1.PIB, 0, 1e10)) {
+        printf("Entrada inválida. Digite um valor válido para o PIB: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Número de pontos turísticos: ");
+    while (scanf("%u", &carta1.pontos_turisticos) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    // Repetir o mesmo processo para a Carta 2
+    printf("\nDigite os dados da Carta 2:\n");
+    printf("Estado (sigla): ");
+    scanf("%2s", carta2.estado);
+    limparBuffer();
+
+    printf("Código: ");
+    while (scanf("%u", &carta2.codigo) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Nome: ");
+    lerString(carta2.nome, sizeof(carta2.nome));
+
+    printf("População: ");
+    while (scanf("%lu", &carta2.populacao) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Área (km²): ");
+    while (scanf("%f", &carta2.area) != 1 || !validarValor(carta2.area, 0.1, 1e7)) {
+        printf("Entrada inválida. Digite um valor positivo para a área: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("PIB (em milhões de US$): ");
+    while (scanf("%f", &carta2.PIB) != 1 || !validarValor(carta2.PIB, 0, 1e10)) {
+        printf("Entrada inválida. Digite um valor válido para o PIB: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    printf("Número de pontos turísticos: ");
+    while (scanf("%u", &carta2.pontos_turisticos) != 1) {
+        printf("Entrada inválida. Digite um número válido: ");
+        limparBuffer();
+    }
+    limparBuffer();
+
+    // Cálculos para ambas as cartas
+    calcularDensidadeEPIB(&carta1);
+    calcularDensidadeEPIB(&carta2);
+
+    calcularSuperPoder(&carta1);
+    calcularSuperPoder(&carta2);
+
+    // Comparação das cartas
+    printf("\nComparação de Cartas:\n");
+
+    // População
+    printf("População: Carta %d venceu\n", 
+           (carta1.populacao > carta2.populacao) ? 1 : 2);
+
+    // Área
+    printf("Área: Carta %d venceu\n", 
+           (carta1.area > carta2.area) ? 1 : 2);
+
+    // PIB
+    printf("PIB: Carta %d venceu\n", 
+           (carta1.PIB > carta2.PIB) ? 1 : 2);
+
+    // Pontos Turísticos
+    printf("Pontos Turísticos: Carta %d venceu\n", 
+           (carta1.pontos_turisticos > carta2.pontos_turisticos) ? 1 : 2);
+
+    // Densidade Populacional (quanto menor, melhor)
+    printf("Densidade Populacional: Carta %d venceu\n", 
+           (carta1.densidade_populacional < carta2.densidade_populacional) ? 1 : 2);
+
+    // PIB per Capita
+    printf("PIB per Capita: Carta %d venceu\n", 
+           (carta1.PIB_per_capita > carta2.PIB_per_capita) ? 1 : 2);
+
+    // Super Poder
+    printf("Super Poder: Carta %d venceu\n", 
+           (carta1.super_poder > carta2.super_poder) ? 1 : 2);
+
+    return 0;
+}
